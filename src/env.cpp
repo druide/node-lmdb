@@ -226,6 +226,33 @@ NAN_METHOD(EnvWrap::sync) {
     return;
 }
 
+NAN_METHOD(EnvWrap::info) {
+    Nan::HandleScope scope;
+
+    EnvWrap *ew = Nan::ObjectWrap::Unwrap<EnvWrap>(info.This());
+
+    if (!ew->env) {
+        return Nan::ThrowError("The environment is already closed.");
+    }
+
+    MDB_envinfo mei;
+    MDB_stat mst;
+
+    mdb_env_info(ew->env, &mei);
+    mdb_env_stat(ew->env, &mst);
+
+    Local<Object> obj = Nan::New<Object>();
+    obj->Set(Nan::New<String>("mapSize").ToLocalChecked(), Nan::New<Number>(mei.me_mapsize));
+    obj->Set(Nan::New<String>("lastPgNo").ToLocalChecked(), Nan::New<Number>(mei.me_last_pgno));
+    obj->Set(Nan::New<String>("lastTxnId").ToLocalChecked(), Nan::New<Number>(mei.me_last_txnid));
+    obj->Set(Nan::New<String>("maxReaders").ToLocalChecked(), Nan::New<Number>(mei.me_maxreaders));
+    obj->Set(Nan::New<String>("numReaders").ToLocalChecked(), Nan::New<Number>(mei.me_numreaders));
+    obj->Set(Nan::New<String>("pageSize").ToLocalChecked(), Nan::New<Number>(mst.ms_psize));
+    obj->Set(Nan::New<String>("entries").ToLocalChecked(), Nan::New<Number>(mst.ms_entries));
+
+    info.GetReturnValue().Set(obj);
+}
+
 void EnvWrap::setupExports(Handle<Object> exports) {
     // EnvWrap: Prepare constructor template
     Local<FunctionTemplate> envTpl = Nan::New<FunctionTemplate>(EnvWrap::ctor);
@@ -237,9 +264,9 @@ void EnvWrap::setupExports(Handle<Object> exports) {
     Nan::SetPrototypeMethod(envTpl, "beginTxn", EnvWrap::beginTxn);
     Nan::SetPrototypeMethod(envTpl, "openDbi", EnvWrap::openDbi);
     Nan::SetPrototypeMethod(envTpl, "sync", EnvWrap::sync);
+    Nan::SetPrototypeMethod(envTpl, "info", EnvWrap::info);
     // TODO: wrap mdb_env_copy too
     // TODO: wrap mdb_env_stat too
-    // TODO: wrap mdb_env_info too
 
     // TxnWrap: Prepare constructor template
     Local<FunctionTemplate> txnTpl = Nan::New<FunctionTemplate>(TxnWrap::ctor);

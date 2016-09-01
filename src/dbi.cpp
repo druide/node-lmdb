@@ -193,6 +193,7 @@ NAN_METHOD(DbiWrap::stat) {
     obj->Set(Nan::New<String>("treeDepth").ToLocalChecked(), Nan::New<Number>(stat.ms_depth));
     obj->Set(Nan::New<String>("treeBranchPageCount").ToLocalChecked(), Nan::New<Number>(stat.ms_branch_pages));
     obj->Set(Nan::New<String>("treeLeafPageCount").ToLocalChecked(), Nan::New<Number>(stat.ms_leaf_pages));
+    obj->Set(Nan::New<String>("treeOverflowPageCount").ToLocalChecked(), Nan::New<Number>(stat.ms_overflow_pages));
     obj->Set(Nan::New<String>("entryCount").ToLocalChecked(), Nan::New<Number>(stat.ms_entries));
 
     info.GetReturnValue().Set(obj);

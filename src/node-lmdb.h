@@ -158,6 +158,11 @@ public:
         * Callback to be executed after the sync is complete.
     */
     static NAN_METHOD(sync);
+
+    /*
+        Information about the environment
+    */
+    static NAN_METHOD(info);
 };
 
 /*

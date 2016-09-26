@@ -9,6 +9,7 @@ var fastFuture = require('fast-future');
 var should = chai.should();
 
 var lmdb = require('..');
+require('../adapter').json.setDefault();
 
 describe('Node.js LMDB Bindings', function() {
   var testDirPath = path.resolve(__dirname, './testdata');
@@ -145,7 +146,7 @@ describe('Node.js LMDB Bindings', function() {
       should.equal(data4, null);
     });
   });
-  describe('Auto data types', function() {
+  describe('Dynamic data types', function() {
     var env;
     var dbi;
     var txn;

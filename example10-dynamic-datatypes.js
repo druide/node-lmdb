@@ -1,6 +1,11 @@
 
 var lmdb = require('./build/Release/node-lmdb');
+require('./adapter').json.setDefault();
+
 var env = new lmdb.Env();
+
+require("mkdirp").sync("./testdata");
+
 env.open({
     // Path to the environment
     path: "./testdata",
@@ -30,7 +35,7 @@ else
 // ----------
 var binaryData = txn.get(dbi, "key2");
 // Print the string representation of the binary
-console.log("binary data: ", binaryData, typeof binaryData);
+console.log("binary data: ", binaryData, Buffer.isBuffer(binaryData) ? 'buffer' : typeof binaryData);
 // Toggle the value
 if (binaryData === null) {
     //var buffer = new Buffer("Hey my friend");
@@ -64,16 +69,6 @@ if (booleanData === null)
 else
     txn.del(dbi, "key4");
 
-// Example for using integer key
-// ----------
-var data = txn.get(dbi, "key5");
-console.log("integer key value: ", data, typeof data);
-if (data === null)
-    txn.put(dbi, "key5", "Hello worllld!");
-else
-    txn.del(dbi, "key5");
-
-// Example for getting/putting/deleting object data
 // ----------
 try {
     var objectData = txn.get(dbi, "key6");
@@ -93,7 +88,7 @@ try {
 try {
     var arrayData = txn.get(dbi, "key7");
     // Print the boolean
-    console.log("array data: ", arrayData, typeof arrayData);
+    console.log("array data: ", arrayData, Array.isArray(arrayData) ? 'array' : typeof arrayData);
     // Toggle the value
     if (arrayData === null)
         txn.put(dbi, "key7", [1, 2, 3, 4, 5]);

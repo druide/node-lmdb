@@ -279,12 +279,10 @@ void EnvWrap::setupExports(Handle<Object> exports) {
     Nan::SetPrototypeMethod(txnTpl, "getBinary", TxnWrap::getBinary);
     Nan::SetPrototypeMethod(txnTpl, "getNumber", TxnWrap::getNumber);
     Nan::SetPrototypeMethod(txnTpl, "getBoolean", TxnWrap::getBoolean);
-    Nan::SetPrototypeMethod(txnTpl, "get", TxnWrap::get);
     Nan::SetPrototypeMethod(txnTpl, "putString", TxnWrap::putString);
     Nan::SetPrototypeMethod(txnTpl, "putBinary", TxnWrap::putBinary);
     Nan::SetPrototypeMethod(txnTpl, "putNumber", TxnWrap::putNumber);
     Nan::SetPrototypeMethod(txnTpl, "putBoolean", TxnWrap::putBoolean);
-    Nan::SetPrototypeMethod(txnTpl, "put", TxnWrap::put);
     Nan::SetPrototypeMethod(txnTpl, "del", TxnWrap::del);
     Nan::SetPrototypeMethod(txnTpl, "reset", TxnWrap::reset);
     Nan::SetPrototypeMethod(txnTpl, "renew", TxnWrap::renew);
@@ -299,6 +297,7 @@ void EnvWrap::setupExports(Handle<Object> exports) {
     dbiTpl->InstanceTemplate()->SetInternalFieldCount(1);
 
     Nan::SetAccessor(dbiTpl->InstanceTemplate(), Nan::New<String>("env").ToLocalChecked(), DbiWrap::getEnv);
+    Nan::SetAccessor(dbiTpl->InstanceTemplate(), Nan::New<String>("name").ToLocalChecked(), DbiWrap::getName);
 
     // DbiWrap: Add functions to the prototype
     Nan::SetPrototypeMethod(dbiTpl, "close", DbiWrap::close);
@@ -307,10 +306,10 @@ void EnvWrap::setupExports(Handle<Object> exports) {
 
     // TODO: wrap mdb_stat too
     // DbiWrap: Get constructor
-    EnvWrap::dbiCtor.Reset( dbiTpl->GetFunction());
+    EnvWrap::dbiCtor.Reset(dbiTpl->GetFunction());
 
     // Set exports
     exports->Set(Nan::New<String>("Env").ToLocalChecked(), envTpl->GetFunction());
-
-    attachJson();
+    exports->Set(Nan::New<String>("Dbi").ToLocalChecked(), dbiTpl->GetFunction());
+    exports->Set(Nan::New<String>("Txn").ToLocalChecked(), txnTpl->GetFunction());
 }

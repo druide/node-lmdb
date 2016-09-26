@@ -21,9 +21,12 @@
   },
   "gypfile": true,
   "dependencies": {
-    "nan": "^2.4.0"
+    "nan": "^2.4.0",
+    "schemapack": "^1.4.2"
   },
   "devDependencies": {
+    "b": "git://github.com/vesln/b.git",
+    "benchmark": "^2.1.1",
     "chai": "^3.5.0",
     "fast-future": "^1.0.1",
     "mkdirp": "^0.5.1",

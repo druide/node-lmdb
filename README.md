@@ -112,9 +112,11 @@ txn.putString(dbi, 2, "Yes, it's this simple!");
 txn.commit();
 ```
 
-#### Auto data types
+#### Dynamic data types
 
-`get` and `put` methods supports the following data types:
+It is possible to extend each Dbi with adapter for dynamic data types.
+Transaction will use adapter to store and read values through additional methods (see `./adapter`).
+Additional `get` and `put` methods supports the following data types:
 
 - Number
 - Boolean

@@ -31,6 +31,7 @@ void setFlagFromValue(int *flags, int flag, const char *name, bool defaultValue,
 DbiWrap::DbiWrap(MDB_env *env, MDB_dbi dbi) {
     this->env = env;
     this->dbi = dbi;
+    this->name = nullptr;
 }
 
 DbiWrap::~DbiWrap() {
@@ -49,6 +50,9 @@ DbiWrap::~DbiWrap() {
 
     if (this->ew) {
         this->ew->Unref();
+    }
+    if (this->name) {
+        delete[] this->name;
     }
 }
 
@@ -119,6 +123,11 @@ NAN_METHOD(DbiWrap::ctor) {
     dw->ew = ew;
     dw->ew->Ref();
     dw->keyIsUint32 = keyIsUint32;
+
+    if (!nameIsNull) {
+        dw->writeName(name);
+    }
+
     dw->Wrap(info.This());
 
     NanReturnThis();
@@ -205,4 +214,23 @@ NAN_GETTER(DbiWrap::getEnv) {
     DbiWrap *dw = Nan::ObjectWrap::Unwrap<DbiWrap>(info.This());
 
     info.GetReturnValue().Set(dw->ew->handle());
+}
+
+NAN_GETTER(DbiWrap::getName) {
+    Nan::HandleScope scope;
+
+    DbiWrap *dw = Nan::ObjectWrap::Unwrap<DbiWrap>(info.This());
+
+    if (dw->name == nullptr) {
+        info.GetReturnValue().SetNull();
+    } else {
+        info.GetReturnValue().Set(Nan::New<String>(dw->name).ToLocalChecked());
+    }
+}
+
+void DbiWrap::writeName(Handle<String> str) {
+    unsigned int l = str->Length() + 1;
+    this->name = new uint16_t[l];
+    str->Write(this->name);
+    this->name[l - 1] = 0;
 }

@@ -1,8 +1,12 @@
-var lmdb = require('./build/Release/node-lmdb');
+var lmdb = require('../build/Release/node-lmdb');
+
+var TEST_DIR = "./testdata";
+require("mkdirp").sync(TEST_DIR);
+
 var env = new lmdb.Env();
 env.open({
   // Path to the environment
-  path: "./testdata",
+  path: TEST_DIR,
   // Maximum number of databases
   maxDbs: 10
 });
@@ -86,7 +90,7 @@ cursor2.goToNext();
 cursor2.getCurrentString(printFunc);
 
 
-//cursor1 still is at its old position and reads the expected values 
+//cursor1 still is at its old position and reads the expected values
 console.log("cursor1 - next (expected c)");
 cursor1.goToNext();
 cursor1.getCurrentNumber(printFunc);

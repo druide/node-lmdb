@@ -1,9 +1,12 @@
-const lmdb = require('./build/Release/node-lmdb');
-const jsonAdapter = require('./adapter').json;
+const lmdb = require('../build/Release/node-lmdb');
+const jsonAdapter = require('../adapter').json;
+
+var TEST_DIR = "./testdata";
+require("mkdirp").sync(TEST_DIR);
 
 let env = new lmdb.Env();
 env.open({
-    path: './testdata',
+    path: TEST_DIR,
     maxDbs: 10,
     mapSize: 1024*1024*1024
 });

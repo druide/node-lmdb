@@ -12,6 +12,8 @@
 //
 // But hey, it's only ~100 LOC, so we're still cool :)
 
+var TEST_DIR = "./testdata";
+require("mkdirp").sync(TEST_DIR);
 
 // Indexing engine (implemented with the module pattern)
 var indexingEngine = (function() {
@@ -19,10 +21,10 @@ var indexingEngine = (function() {
 
     // initializer function, call this before using the index
     var init = function() {
-        lmdb = require('./build/Release/node-lmdb');
+        lmdb = require('../build/Release/node-lmdb');
         env = new lmdb.Env();
         env.open({
-            path: "./testdata",
+            path: TEST_DIR,
             maxDbs: 10
         });
 

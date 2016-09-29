@@ -1,15 +1,17 @@
-
 /*
     Example that shows how to use node-lmdb with LARGE databases
 */
 
 // Set things up
 
-var lmdb = require('./build/Release/node-lmdb');
+var lmdb = require('../build/Release/node-lmdb');
 var fs = require('fs');
 
+var TEST_DIR = "./testdata";
+require("mkdirp").sync(TEST_DIR);
+
 var env = new lmdb.Env();
-env.open({ path: './testdata', mapSize: 16 * 1024 * 1024 * 1024 });
+env.open({ path: TEST_DIR, mapSize: 16 * 1024 * 1024 * 1024 });
 var dbi = env.openDbi({ name: 'test', create: true });
 
 // See how much we can squeeze into the db

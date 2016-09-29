@@ -1,10 +1,12 @@
-var lmdb = require('./build/Release/node-lmdb');
-var env = new lmdb.Env();
+var lmdb = require('../build/Release/node-lmdb');
 
-require("mkdirp").sync("./testdata");
+var TEST_DIR = "./testdata";
+require("mkdirp").sync(TEST_DIR);
+
+var env = new lmdb.Env();
 env.open({
     // Path to the environment
-    path: "./testdata",
+    path: TEST_DIR,
     // Maximum number of databases
     maxDbs: 10
 });

@@ -1,6 +1,6 @@
 const Benchmark = require('benchmark');
-const lmdb = require('./build/Release/node-lmdb');
-const jsonAdapter = require('./adapter').json;
+const lmdb = require('../build/Release/node-lmdb');
+const jsonAdapter = require('../adapter').json;
 const _ = require('lodash');
 let schemapack;
 try {
@@ -8,14 +8,15 @@ try {
 } catch (e) {}
 let schemapackAdapter;
 if (schemapack) {
-    schemapackAdapter = require('./adapter').schemapack;
+    schemapackAdapter = require('../adapter').schemapack;
 }
 
-require("mkdirp").sync("./testdata");
+var TEST_DIR = "./testdata";
+require("mkdirp").sync(TEST_DIR);
 
 let env = new lmdb.Env();
 env.open({
-    path: './testdata',
+    path: TEST_DIR,
     maxDbs: 10,
     mapSize: 1024 * 1024 * 1024
 });

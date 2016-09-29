@@ -1,14 +1,16 @@
-
 // Require the module
-var lmdb = require('./build/Release/node-lmdb');
+var lmdb = require('../build/Release/node-lmdb');
+
+var TEST_DIR = "./testdata";
+require("mkdirp").sync(TEST_DIR);
 
 // Create new LMDB environment
 var env = new lmdb.Env();
 // Open the environment
 env.open({
-    path: "./testdata",
+    path: TEST_DIR,
     maxDbs: 10,
-    
+
     // These options prevent LMDB from automatically syncing on commit
     noMetaSync: true,
     noSync: true

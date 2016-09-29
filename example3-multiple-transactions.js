@@ -1,6 +1,7 @@
-
 var lmdb = require('./build/Release/node-lmdb');
 var env = new lmdb.Env();
+
+require("mkdirp").sync("./testdata");
 env.open({
     // Path to the environment
     path: "./testdata",
@@ -10,7 +11,7 @@ env.open({
 var dbi = env.openDbi({
    name: "mydb3",
    create: true,
-   keyIsUint32: true
+   keyType: 1
 });
 
 var data;

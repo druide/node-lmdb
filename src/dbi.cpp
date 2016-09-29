@@ -63,7 +63,7 @@ NAN_METHOD(DbiWrap::ctor) {
     MDB_txn *txn;
     int rc;
     int flags = 0;
-    int keyIsUint32 = 0;
+    int keyType = 0;
     Local<String> name;
     bool nameIsNull = false;
 
@@ -88,8 +88,9 @@ NAN_METHOD(DbiWrap::ctor) {
         // TODO: wrap mdb_set_dupsort
 
         // See if key is uint32_t
-        setFlagFromValue(&keyIsUint32, 1, "keyIsUint32", false, options);
-        if (keyIsUint32) {
+        Local<Value> opt = options->Get(Nan::New<String>("keyType").ToLocalChecked());
+        keyType = opt->IsUint32() ? opt->Uint32Value() : 0;
+        if (keyType == KEY_TYPE_INTEGER) {
             flags |= MDB_INTEGERKEY;
         }
     }
@@ -122,7 +123,7 @@ NAN_METHOD(DbiWrap::ctor) {
     DbiWrap* dw = new DbiWrap(ew->env, dbi);
     dw->ew = ew;
     dw->ew->Ref();
-    dw->keyIsUint32 = keyIsUint32;
+    dw->keyType = keyType;
 
     if (!nameIsNull) {
         dw->writeName(name);

@@ -59,7 +59,7 @@ NAN_METHOD(CursorWrap::ctor) {
     cw->dw->Ref();
     cw->tw = tw;
     cw->tw->Ref();
-    cw->keyIsUint32 = dw->keyIsUint32;
+    cw->keyType = dw->keyType;
     cw->Wrap(info.This());
 
     NanReturnThis();
@@ -126,7 +126,7 @@ Nan::NAN_METHOD_RETURN_TYPE CursorWrap::getCommon(
 
     Local<Value> keyHandle = Nan::Undefined();
     if (cw->key.mv_size) {
-        keyHandle = keyToHandle(cw->key, cw->keyIsUint32);
+        keyHandle = keyToHandle(cw->key, cw->keyType);
     }
 
     if (convertFunc && al > 0 && info[al - 1]->IsFunction()) {
@@ -189,13 +189,13 @@ MAKE_GET_FUNC(goToPrevDup, MDB_PREV_DUP);
 
 NAN_METHOD(CursorWrap::goToKey) {
     return getCommon(info, MDB_SET, [](CursorWrap* cw, Nan::NAN_METHOD_ARGS_TYPE info, MDB_val &key) -> void {
-        argToKey(info[0], key, cw->keyIsUint32);
+        argToKey(info[0], key, cw->keyType);
     }, nullptr, nullptr, nullptr);
 }
 
 NAN_METHOD(CursorWrap::goToRange) {
     return getCommon(info, MDB_SET_RANGE, [](CursorWrap* cw, Nan::NAN_METHOD_ARGS_TYPE info, MDB_val &key) -> void {
-        argToKey(info[0], key, cw->keyIsUint32);
+        argToKey(info[0], key, cw->keyType);
     }, nullptr, nullptr, nullptr);
 }
 
@@ -249,13 +249,13 @@ static void freeDataFromArg1(CursorWrap* cw, Nan::NAN_METHOD_ARGS_TYPE info, MDB
 
 NAN_METHOD(CursorWrap::goToDup) {
     return getCommon(info, MDB_GET_BOTH, [](CursorWrap* cw, Nan::NAN_METHOD_ARGS_TYPE info, MDB_val &key) -> void {
-        argToKey(info[0], key, cw->keyIsUint32);
+        argToKey(info[0], key, cw->keyType);
     }, fillDataFromArg1, freeDataFromArg1, nullptr);
 }
 
 NAN_METHOD(CursorWrap::goToDupRange) {
     return getCommon(info, MDB_GET_BOTH_RANGE, [](CursorWrap* cw, Nan::NAN_METHOD_ARGS_TYPE info, MDB_val &key) -> void {
-        argToKey(info[0], key, cw->keyIsUint32);
+        argToKey(info[0], key, cw->keyType);
     }, fillDataFromArg1, freeDataFromArg1, nullptr);
 }
 

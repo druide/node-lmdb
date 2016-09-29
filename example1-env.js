@@ -1,4 +1,3 @@
-
 // Require the module
 var lmdb = require('./build/Release/node-lmdb');
 // Now you can use the module
@@ -7,7 +6,9 @@ var lmdb = require('./build/Release/node-lmdb');
 console.log("Current lmdb version is", lmdb.version);
 // Create new LMDB environment
 var env = new lmdb.Env();
+
 // Open the environment
+require("mkdirp").sync("./testdata");
 env.open({
     // Path to the environment
     // IMPORTANT: you will get an error if the directory doesn't exist!

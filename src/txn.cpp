@@ -146,7 +146,7 @@ Nan::NAN_METHOD_RETURN_TYPE TxnWrap::getCommon(Nan::NAN_METHOD_ARGS_TYPE info, L
     }
 
     MDB_val key, data;
-    void (*freeKey)(MDB_val&) = argToKey(info[1], key, dw->keyIsUint32);
+    void (*freeKey)(MDB_val&) = argToKey(info[1], key, dw->keyType);
     if (!freeKey) {
         return;
     }
@@ -194,7 +194,7 @@ Nan::NAN_METHOD_RETURN_TYPE TxnWrap::putCommon(Nan::NAN_METHOD_ARGS_TYPE info, v
     int flags = 0;
     MDB_val key, data;
 
-    void (*freeKey)(MDB_val&) = argToKey(info[1], key, dw->keyIsUint32);
+    void (*freeKey)(MDB_val&) = argToKey(info[1], key, dw->keyType);
     if (!freeKey) {
         return;
     }
@@ -260,7 +260,7 @@ NAN_METHOD(TxnWrap::del) {
     }
 
     MDB_val key;
-    void (*freeKey)(MDB_val&) = argToKey(info[1], key, dw->keyIsUint32);
+    void (*freeKey)(MDB_val&) = argToKey(info[1], key, dw->keyType);
     if (!freeKey) {
         return;
     }

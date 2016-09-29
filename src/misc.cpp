@@ -45,19 +45,25 @@ void setFlagFromValue(int *flags, int flag, const char *name, bool defaultValue,
     }
 }
 
-argtokey_callback_t argToKey(const Local<Value> &val, MDB_val &key, bool keyIsUint32) {
+argtokey_callback_t argToKey(const Local<Value> &val, MDB_val &key, int keyType) {
     // Check key type
-    if (keyIsUint32 && !val->IsUint32()) {
-        Nan::ThrowError("Invalid key. keyIsUint32 specified on the database, but the given key was not an unsigned 32-bit integer");
-        return nullptr;
-    }
-    if (!keyIsUint32 && !val->IsString()) {
-        Nan::ThrowError("Invalid key. String key expected, because keyIsUint32 isn't specified on the database.");
+    if (keyType == KEY_TYPE_INTEGER) {
+        if (!val->IsUint32()) {
+            Nan::ThrowError("Invalid key. Unsigned 32-bit integer expected, as specified by keyType option.");
+            return nullptr;
+        }
+    } else if (keyType == KEY_TYPE_BUFFER) {
+        if (!node::Buffer::HasInstance(val)) {
+            Nan::ThrowError("Invalid key. Buffer key expected, as specified by keyType option.");
+            return nullptr;
+        }
+    } else if (!val->IsString()) {
+        Nan::ThrowError("Invalid key. String key expected, as specified by keyType option and by default.");
         return nullptr;
     }
 
     // Handle uint32_t key
-    if (keyIsUint32) {
+    if (keyType == KEY_TYPE_INTEGER) {
         uint32_t *v = new uint32_t;
         *v = val->Uint32Value();
 
@@ -66,6 +72,14 @@ argtokey_callback_t argToKey(const Local<Value> &val, MDB_val &key, bool keyIsUi
 
         return ([](MDB_val &key) -> void {
             delete (uint32_t*)key.mv_data;
+        });
+    }
+
+    // handle buffer key
+    if (keyType == KEY_TYPE_BUFFER) {
+        key.mv_size = node::Buffer::Length(val);
+        key.mv_data = node::Buffer::Data(val);
+        return ([](MDB_val &key) -> void {
         });
     }
 
@@ -78,11 +92,12 @@ argtokey_callback_t argToKey(const Local<Value> &val, MDB_val &key, bool keyIsUi
     return nullptr;
 }
 
-Local<Value> keyToHandle(MDB_val &key, bool keyIsUint32) {
-    if (keyIsUint32) {
+Local<Value> keyToHandle(MDB_val &key, int keyType) {
+    if (keyType == KEY_TYPE_INTEGER) {
         return Nan::New<Integer>(*((uint32_t*)key.mv_data));
-    }
-    else {
+    } else if (keyType == KEY_TYPE_BUFFER) {
+        return valToBinary(key);
+    } else {
         return valToString(key);
     }
 }

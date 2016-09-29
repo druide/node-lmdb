@@ -234,7 +234,7 @@ describe('Node.js LMDB Bindings', function() {
       dbi = env.openDbi({
         name: 'mydb4',
         create: true,
-        keyIsUint32: true
+        keyType: 1
       });
       var txn = env.beginTxn();
       txn.putString(dbi, 1, 'Hello1');
@@ -293,7 +293,7 @@ describe('Node.js LMDB Bindings', function() {
         name: 'mydb5',
         create: true,
         dupSort: true,
-        keyIsUint32: true
+        keyType: 1
       });
       var txn = env.beginTxn();
       var c = 0;

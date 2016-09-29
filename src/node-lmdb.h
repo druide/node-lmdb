@@ -36,6 +36,10 @@
 using namespace v8;
 using namespace node;
 
+#define KEY_TYPE_STRING 0
+#define KEY_TYPE_INTEGER 1
+#define KEY_TYPE_BUFFER 2
+
 // Exports misc stuff to the module
 void setupExportMisc(Handle<Object> exports);
 
@@ -46,8 +50,8 @@ void consoleLog(Local<Value> val);
 void consoleLog(const char *msg);
 void consoleLogN(int n);
 void setFlagFromValue(int *flags, int flag, const char *name, bool defaultValue, Local<Object> options);
-argtokey_callback_t argToKey(const Local<Value> &val, MDB_val &key, bool keyIsUint32);
-Local<Value> keyToHandle(MDB_val &key, bool keyIsUint32);
+argtokey_callback_t argToKey(const Local<Value> &val, MDB_val &key, int keyType);
+Local<Value> keyToHandle(MDB_val &key, int keyType);
 Local<Value> valToString(MDB_val &data);
 Local<Value> valToBinary(MDB_val &data);
 Local<Value> valToNumber(MDB_val &data);
@@ -132,7 +136,7 @@ public:
 
         * name: the name of the database (or null to use the unnamed database)
         * create: if true, the database will be created if it doesn't exist
-        * keyIsUint32: if true, keys are treated as 32-bit unsigned integers
+        * keyType: 0 - string, 1 - 32-bit unsigned integer, 2 - binary
         * dupSort: if true, the database can hold multiple items with the same key
         * reverseKey: keys are strings to be compared in reverse order
         * dupFixed: if dupSort is true, indicates that the data items are all the same size
@@ -326,7 +330,7 @@ public:
 class DbiWrap : public Nan::ObjectWrap {
 private:
     // Stores whether keys should be treated as uint32_t
-    bool keyIsUint32;
+    int keyType;
     // The wrapped object
     MDB_dbi dbi;
     // Reference to the MDB_env of the wrapped MDB_dbi
@@ -384,7 +388,7 @@ private:
     // The wrapped object
     MDB_cursor *cursor;
     // Stores whether keys should be treated as uint32_t
-    bool keyIsUint32;
+    int keyType;
     // Key/data pair where the cursor is at
     MDB_val key, data;
     DbiWrap *dw;

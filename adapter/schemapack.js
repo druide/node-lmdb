@@ -53,5 +53,5 @@ exports.cursorGet = function (cb) {
 exports.setDefault = function () {
     lmdb.Txn.prototype.get = exports.txnGet;
     lmdb.Txn.prototype.put = exports.txnPut;
-    lmdb.Cursor.prototype.get = exports.cursorPut;
+    lmdb.Cursor.prototype.get = exports.cursorGet;
 };

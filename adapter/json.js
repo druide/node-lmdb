@@ -93,7 +93,7 @@ exports.txnPut = function (dbi, key, value) {
  * @param  {Function} cb function (value, key)
  */
 exports.cursorGet = function (cb) {
-    function fn (v, key) {
+    function fn (key, v) {
         v = bin2val(v);
         return cb(v, key);
     }
@@ -104,10 +104,10 @@ exports.cursorGet = function (cb) {
 exports.setDefault = function () {
     lmdb.Txn.prototype.get = exports.txnGet;
     lmdb.Txn.prototype.put = exports.txnPut;
-    lmdb.Cursor.prototype.get = exports.cursorPut;
+    lmdb.Cursor.prototype.get = exports.cursorGet;
 };
 exports.setDefault = function () {
     lmdb.Txn.prototype.get = exports.txnGet;
     lmdb.Txn.prototype.put = exports.txnPut;
-    lmdb.Cursor.prototype.get = exports.cursorPut;
+    lmdb.Cursor.prototype.get = exports.cursorGet;
 };

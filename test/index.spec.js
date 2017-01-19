@@ -12,7 +12,7 @@ var lmdb = require('..');
 require('../adapter').json.setDefault();
 
 describe('Node.js LMDB Bindings', function() {
-  var testDirPath = path.resolve(__dirname, './testdata');
+  var testDirPath = path.resolve(__dirname, '..', 'data', 'test');
   before(function(done) {
     // cleanup previous test directory
     rimraf(testDirPath, function(err) {
@@ -287,7 +287,7 @@ describe('Node.js LMDB Bindings', function() {
       env.open({
         path: testDirPath,
         maxDbs: 10,
-        mapSize: 16 * 1024 * 1024 * 1024
+        mapSize: 2 * 1024 * 1024 * 1024
       });
       dbi = env.openDbi({
         name: 'mydb5',
@@ -308,6 +308,7 @@ describe('Node.js LMDB Bindings', function() {
     after(function() {
       dbi.close();
       env.close();
+      rimraf.sync(testDirPath);
     });
     it('will move cursor over key/values', function() {
       var txn = env.beginTxn();

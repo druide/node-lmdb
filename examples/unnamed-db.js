@@ -2,8 +2,7 @@
 var lmdb = require('../build/Release/node-lmdb');
 // Now you can use the module
 
-var TEST_DIR = "./testdata";
-require("mkdirp").sync(TEST_DIR);
+var TEST_DIR = require('./examples-init');
 
 // Print the version
 console.log("Current lmdb version is", lmdb.version);

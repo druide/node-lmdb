@@ -7,8 +7,7 @@
 var lmdb = require('../build/Release/node-lmdb');
 var fs = require('fs');
 
-var TEST_DIR = "./testdata";
-require("mkdirp").sync(TEST_DIR);
+var TEST_DIR = require('./examples-init');
 
 var env = new lmdb.Env();
 env.open({ path: TEST_DIR, mapSize: 16 * 1024 * 1024 * 1024 });
@@ -34,7 +33,7 @@ catch (error) {
 // Utility functions
 
 function getDbSize () {
-    return fs.statSync('./testdata/data.mdb').size / 1024 / 1024;
+    return fs.statSync(TEST_DIR + '/data.mdb').size / 1024 / 1024;
 }
 
 function randomString (length) {

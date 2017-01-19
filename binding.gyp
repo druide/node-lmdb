@@ -2,6 +2,7 @@
   "targets": [
     {
       "target_name": "node-lmdb",
+      "win_delay_load_hook": "false",
       "sources": [
         "libraries/liblmdb/mdb.c",
         "libraries/liblmdb/lmdb.h",

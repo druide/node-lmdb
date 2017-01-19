@@ -5,8 +5,7 @@ var lmdb = require('../build/Release/node-lmdb');
 // Print the version
 console.log("Current lmdb version is", lmdb.version);
 
-var TEST_DIR = "./testdata";
-require("mkdirp").sync(TEST_DIR);
+var TEST_DIR = require('./examples-init');
 
 // Create new LMDB environment
 var env = new lmdb.Env();

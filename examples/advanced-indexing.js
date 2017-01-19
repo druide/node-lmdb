@@ -12,8 +12,7 @@
 //
 // But hey, it's only ~100 LOC, so we're still cool :)
 
-var TEST_DIR = "./testdata";
-require("mkdirp").sync(TEST_DIR);
+var TEST_DIR = require('./examples-init');
 
 // Indexing engine (implemented with the module pattern)
 var indexingEngine = (function() {

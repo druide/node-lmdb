@@ -1,7 +1,6 @@
 var lmdb = require('../build/Release/node-lmdb');
 
-var TEST_DIR = "./testdata";
-require("mkdirp").sync(TEST_DIR);
+var TEST_DIR = require('./examples-init');
 
 var dbi;
 

@@ -1,8 +1,7 @@
 var lmdb = require('../build/Release/node-lmdb');
 require('../adapter').json.setDefault();
 
-var TEST_DIR = "./testdata";
-require("mkdirp").sync(TEST_DIR);
+var TEST_DIR = require('./examples-init');
 
 var env = new lmdb.Env();
 env.open({
